@@ -1,7 +1,8 @@
-import { YGroup, ListItem, styled, YStack, Separator, Text, Button } from "tamagui";
+import { YGroup, ListItem, styled, View, Text, Button } from "tamagui";
 import { useEffect, useState } from "react";
 import { Loading } from "../components/loading";
 import { getUser } from "./functions/listUsers/GetUsers";
+import { router } from "expo-router";
 
 export default function ListProfiles() {
 
@@ -13,10 +14,16 @@ export default function ListProfiles() {
         getUser(setData, setLoading, setError)
     }, [])
 
-    return (
-        <YStack padding="$3" backgroundColor="#bdbebd">
+    function goToCreate() {
+        router.push("/CreateProfile")
+    }
 
-            <YGroup>
+    return (
+        <View padding="5" backgroundColor="#bdbebd" alignItems="center">
+
+            <Button margin="10" backgroundColor="blue" color="#fff" fontWeight="bold" onPress={goToCreate}>Criar Usuario</Button>
+
+            <YGroup width="100%" alignItems="center">
                 {loading && <Loading />}
                 {!loading && data?.length ?
                     data.map((data, i) => (
@@ -27,7 +34,7 @@ export default function ListProfiles() {
                         </YGroup.Item>
                     )) : null}
             </YGroup>
-        </YStack>
+        </View>
     );
 }
 
@@ -35,5 +42,5 @@ const StyledCard = styled(ListItem, {
     backgroundColor: "#e9e9e9",
     color: "#fff",
     marginBottom: 3,
-    width: "100%"
+    width: "90%"
 })
