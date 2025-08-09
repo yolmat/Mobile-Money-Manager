@@ -1,34 +1,39 @@
-import { Text, View, StyleSheet, Button } from "react-native";
-import { router } from "expo-router";
+import { YGroup, ListItem, styled, YStack, Separator, Text, Button } from "tamagui";
+import { useEffect, useState } from "react";
+import { Loading } from "../components/loading";
+import { getUser } from "./functions/listUsers/GetUsers";
 
-export default function Home() {
-    function goToCreate() {
-        router.push("/CreateProfile")
-    }
+export default function ListProfiles() {
 
-    function goToHome() {
-        router.push("/")
-    }
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
 
-    function goToList() {
-        router.push("/ListProfiles")
-    }
+    useEffect(() => {
+        getUser(setData, setLoading, setError)
+    }, [])
 
     return (
-        <View style={styles.container}>
-            <Text >Create Screen</Text>
-            <Button title="Push to Home" onPress={goToHome} />
-            <Button title="Push to Create" onPress={goToCreate} />
-            <Button title="Push to List" onPress={goToList} />
-        </View>
+        <YStack padding="$3" backgroundColor="#bdbebd">
+
+            <YGroup>
+                {loading && <Loading />}
+                {!loading && data?.length ?
+                    data.map((data, i) => (
+                        <YGroup.Item key={i} >
+                            <StyledCard>
+                                <Text>{data.name}</Text>
+                            </StyledCard>
+                        </YGroup.Item>
+                    )) : null}
+            </YGroup>
+        </YStack>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center'
-    }
+const StyledCard = styled(ListItem, {
+    backgroundColor: "#e9e9e9",
+    color: "#fff",
+    marginBottom: 3,
+    width: "100%"
 })
